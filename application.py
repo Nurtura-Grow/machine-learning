@@ -1,19 +1,18 @@
-# api_ml.py
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 from penyiraman import klasifikasi_pengairan
 from pemupukan import rekomendasi_pupuk_api
 
-app = Flask(__name__)
-cors = CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
+application = Flask(__name__)
+cors = CORS(application)
+application.config['CORS_HEADERS'] = 'Content-Type'
 
-@app.route('/', methods=['GET'])
+@application.route('/', methods=['GET'])
 @cross_origin()
 def index():
     return jsonify({"message": "Hello, World!"});
 
-@app.route("/pemupukan", methods=["POST"])
+@application.route("/pemupukan", methods=["POST"])
 @cross_origin()
 def pemupukan_api():
     try:
@@ -33,7 +32,7 @@ def pemupukan_api():
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
 
-@app.route("/penyiraman", methods=["POST"])
+@application.route("/penyiraman", methods=["POST"])
 @cross_origin()
 def penyiraman_api():
     try:
@@ -55,4 +54,4 @@ def penyiraman_api():
         return jsonify({"error": str(e)}), 400
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    application.run()
