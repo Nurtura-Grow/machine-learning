@@ -4,3 +4,4 @@ pemupukan-coba-2.py
 penyiraman-coba-2.py
 .venv
 ignore
+.env

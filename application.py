@@ -2,15 +2,18 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 from penyiraman import klasifikasi_pengairan
 from pemupukan import rekomendasi_pupuk_api
+from prediction import prediction
 
 application = Flask(__name__)
 cors = CORS(application)
-application.config['CORS_HEADERS'] = 'Content-Type'
+application.config["CORS_HEADERS"] = "Content-Type"
 
-@application.route('/', methods=['GET'])
+
+@application.route("/", methods=["GET"])
 @cross_origin()
 def index():
-    return jsonify({"message": "Hello, World!"});
+    return jsonify({"message": "Hello, World!"})
+
 
 @application.route("/pemupukan", methods=["POST"])
 @cross_origin()
@@ -32,6 +35,7 @@ def pemupukan_api():
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
 
+
 @application.route("/penyiraman", methods=["POST"])
 @cross_origin()
 def penyiraman_api():
@@ -39,7 +43,7 @@ def penyiraman_api():
         input_data = request.get_json()
         if not input_data:
             raise ValueError("No input data provided")
-        
+
         if input_data.get("SoilMoisture") is None:
             raise ValueError("SoilMoisture is required")
         if input_data.get("Humidity") is None:
@@ -48,6 +52,19 @@ def penyiraman_api():
             raise ValueError("temperature is required")
 
         result = klasifikasi_pengairan(input_data)
+        return result
+
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+
+@application.route("/predict", methods=["POST"])
+@cross_origin()
+def predict_api():
+    try:
+        # Use the prediction module for ARIMA prediction
+        result = prediction()
+
+        # Return the predicted data as JSON response
         return result
 
     except ValueError as e:
