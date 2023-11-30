@@ -29,7 +29,7 @@ def prediction():
     ]
 
     # Buat query SQL untuk memilih kolom-kolom yang diinginkan
-    query = f"SELECT {', '.join(columns_to_select)} FROM {table_name}"
+    query = f"SELECT {', '.join(columns_to_select)} FROM {table_name} ORDER BY timestamp_pengukuran ASC"
 
     # Baca data dari tabel ke dalam DataFrame
     df = pd.read_sql_query(query, con=engine)
