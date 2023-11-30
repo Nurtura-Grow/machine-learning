@@ -3,7 +3,8 @@ import pandas as pd
 import json
 import statsmodels.api as sm
 from datetime import datetime, timedelta
-from sqlalchemy import create_engine
+import pymysql
+from pymysql.cursors import DictCursor
 from decouple import config
 
 username = config("DB_USERNAME", "root")
@@ -13,14 +14,17 @@ port = config("DB_PORT", "3306")
 database = config("DB_DATABASE", "nurtura_grow")
 
 def prediction():
-    # Ganti nilai variabel berikut dengan informasi koneksi database PHPMyAdmin Anda
-    database_url = f"mysql://{username}:{password}@{host}:{port}/{database}"
-    engine = create_engine(database_url)
+    # Create database connection using PyMySQL
+    connection = pymysql.connect(
+        host=host,
+        user=username,
+        password=password,
+        database=database,
+        cursorclass=DictCursor,
+    )
 
-    # Ganti nilai variabel berikut dengan nama tabel yang sesuai
+    # Define the table name and columns to select
     table_name = "data_sensor"
-
-    # Ganti kolom-kolom sesuai kebutuhan
     columns_to_select = [
         "timestamp_pengukuran",
         "kelembapan_tanah",
@@ -28,11 +32,17 @@ def prediction():
         "suhu",
     ]
 
-    # Buat query SQL untuk memilih kolom-kolom yang diinginkan
+    # Construct the SQL query
     query = f"SELECT {', '.join(columns_to_select)} FROM {table_name} ORDER BY timestamp_pengukuran ASC"
 
-    # Baca data dari tabel ke dalam DataFrame
-    df = pd.read_sql_query(query, con=engine)
+    # Execute the query and read into a DataFrame
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        df = pd.DataFrame(rows)
+
+    # Close the database connection
+    connection.close()
 
     df = df.rename(
         columns={
