@@ -1,0 +1,10 @@
+# .ebextensions/01-environment.config
+option_settings:
+  aws:elasticbeanstalk:application:environment:
+    DB_CONNECTION: 'mysql'
+    DB_HOST: 'your-db-hostname'
+    DB_PORT: 'your-db-port'
+    DB_DATABASE: 'your-db-name'
+    DB_USERNAME: 'your-username'
+    DB_PASSWORD: 'your-password'
+

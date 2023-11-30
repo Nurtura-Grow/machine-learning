@@ -5,3 +5,5 @@ penyiraman-coba-2.py
 .venv
 ignore
 .env
+
+.ebextensions/01-environment.config
