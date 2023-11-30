@@ -116,7 +116,7 @@ def prediction():
             "Time": [df.index[-1] + timedelta(hours=1)],
             "SoilMoisture": predicted_soil_moisture_1_hour_arima,
             "Humidity": predicted_humidity_1_hour_arima,
-            "Temperature": predicted_temperature_1_hour_arima,
+            "temperature": predicted_temperature_1_hour_arima,
         }
     )
 

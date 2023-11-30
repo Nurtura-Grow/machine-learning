@@ -8,7 +8,7 @@ def label_cluster(soil_moisture, humidity, temperature):
     volume_hasil_tanah = 0
     volume_hasil_udara = 0
 
-    if temperature in range(25, 33):
+    if 25 <= temperature < 33:
         # SoilMoisture less than 50
         volume_hasil_tanah = 3
         volume_hasil_udara = 3
@@ -17,14 +17,14 @@ def label_cluster(soil_moisture, humidity, temperature):
             volume_hasil_tanah = 1
             volume_hasil_udara = 1
 
-        elif soil_moisture in range(50, 69):
+        elif 50 <= soil_moisture < 69:
             volume_hasil_tanah = 2
             volume_hasil_udara = 3
 
             if humidity > 69:
                 volume_hasil_udara = 1
 
-            elif humidity in range(60, 69):
+            elif 60 <= humidity < 69:
                 volume_hasil_udara = 2
 
     elif temperature > 33:
@@ -93,11 +93,6 @@ def klasifikasi_pengairan(input_data):
             new_data["Volume_Hasil_Tanah"] + new_data["Volume_Hasil_Udara"]
         ) / 2
         info = set_nyala_waktu(new_data["Cluster"].iloc[0])
-
-        # Append the new data to the CSV file
-        new_data.to_csv(
-            "data_cuaca_dengan_cluster_baru.csv", mode="a", header=False, index=False
-        )
 
         # Return the response
         response = {"Kondisi": kondisi, "Saran": saran, "Informasi Kluster": info}
