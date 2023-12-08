@@ -170,7 +170,7 @@ def train_and_predict(df_soil_moisture, df_humidity, df_temperature, latest_data
     return predicted_data
 
 # Fungsi utama untuk mendapatkan prediksi
-def get_prediction():
+def prediction():
     try:
         # Dapatkan data terbaru dari database
         latest_data = get_latest_data()
