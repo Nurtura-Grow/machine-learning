@@ -6,3 +6,4 @@ ignore
 .env
 
 .ebextensions/01-environment.config
+*.zip
