@@ -25,13 +25,9 @@ def label_cluster(soil_moisture, humidity, temperature):
             elif 60 <= humidity < 69:
                 hasil_udara = 2
 
-    elif temperature > 33:
-        hasil_tanah = 1.5
-        hasil_udara = 1.5
-
-    elif temperature < 25:
-        hasil_tanah = 1.2
-        hasil_udara = 1.2
+    elif 25 > temperature > 33:
+        hasil_tanah = 1
+        hasil_udara = 1
 
     return pd.Series([hasil_tanah, hasil_udara])
 
@@ -39,22 +35,21 @@ def label_cluster(soil_moisture, humidity, temperature):
 # Define the function to evaluate the condition
 def evaluate_condition(hasil_tanah, hasil_udara):
     conditions = {
-        (1, 1): ("Tanah sudah optimal", "Tidak diperlukan penyiraman"),
+        (1, 1): ("Ideal", "Tidak diperlukan penyiraman"),
         (2, 1): (
-            "Tanah cukup lembab, kelembaban udara tinggi",
+            "Ideal",
             "Tidak diperlukan penyiraman",
         ),
         (2, 2): (
-            "Tanah cukup lembab, kelembaban udara sedang",
+            "Kurang ideal",
             "Diperlukan sedikit penyiraman",
         ),
         (2, 3): (
-            "Tanah cukup lembab, kelembaban udara rendah",
+            "Kurang Ideal",
             "Diperlukan sedikit penyiraman untuk menaikkan kelembaban udara",
         ),
-        (3, 3): ("Tanah kering", "Diperlukan penyiraman dengan volume yang besar"),
-        (1.5, 1.5): ("Suhu udara tinggi", "Tidak diperlukan penyiraman"),
-        (1.2, 1.2): ("Suhu udara rendah", "Tidak diperlukan penyiraman"),
+        (3, 3): ("Kritis", "Diperlukan penyiraman dengan volume yang besar"),
+        
     }
 
     return conditions.get(
