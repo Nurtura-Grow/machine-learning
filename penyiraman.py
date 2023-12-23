@@ -25,7 +25,7 @@ def label_cluster(soil_moisture, humidity, temperature):
             elif 60 <= humidity < 69:
                 hasil_udara = 2
 
-    elif 25 > temperature > 33:
+    elif temperature < 25 or temperature > 33:
         hasil_tanah = 1
         hasil_udara = 1
 
@@ -49,7 +49,6 @@ def evaluate_condition(hasil_tanah, hasil_udara):
             "Diperlukan sedikit penyiraman untuk menaikkan kelembaban udara",
         ),
         (3, 3): ("Kritis", "Diperlukan penyiraman dengan volume yang besar"),
-        
     }
 
     return conditions.get(
@@ -69,6 +68,7 @@ def set_nyala_waktu(cluster):
     else:
         return {}  # When the cluster does not match any condition
 
+
 def klasifikasi_pengairan(input_data):
     try:
         new_data = pd.DataFrame([input_data])
@@ -82,9 +82,7 @@ def klasifikasi_pengairan(input_data):
             new_data["Hasil_Tanah"].iloc[0],
             new_data["Hasil_Udara"].iloc[0],
         )
-        new_data["Cluster"] = (
-            new_data["Hasil_Tanah"] + new_data["Hasil_Udara"]
-        ) / 2
+        new_data["Cluster"] = (new_data["Hasil_Tanah"] + new_data["Hasil_Udara"]) / 2
         info = set_nyala_waktu(new_data["Cluster"].iloc[0])
 
         # Return the response
