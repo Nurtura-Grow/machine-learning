@@ -15,19 +15,20 @@ def label_cluster(soil_moisture, humidity, temperature):
             hasil_tanah = 1
             hasil_udara = 1
 
-        elif 50 <= soil_moisture < 69:
+        elif 50 <= soil_moisture <= 69:
             hasil_tanah = 2
             hasil_udara = 3
 
             if humidity > 69:
                 hasil_udara = 1
 
-            elif 60 <= humidity < 69:
+            elif 60 <= humidity <= 69:
                 hasil_udara = 2
 
-    elif temperature < 25 or temperature > 33:
-        hasil_tanah = 1
-        hasil_udara = 1
+    elif temperature < 25 or temperature >= 33:
+        hasil_tanah = 1.2
+        hasil_udara = 1.2
+
 
     return pd.Series([hasil_tanah, hasil_udara])
 
@@ -35,6 +36,7 @@ def label_cluster(soil_moisture, humidity, temperature):
 # Define the function to evaluate the condition
 def evaluate_condition(hasil_tanah, hasil_udara):
     conditions = {
+        (1.2, 1.2): ("Suhu tidak ideal", "Tidak diperlukan penyiraman"),
         (1, 1): ("Ideal", "Tidak diperlukan penyiraman"),
         (2, 1): (
             "Ideal",
@@ -49,6 +51,7 @@ def evaluate_condition(hasil_tanah, hasil_udara):
             "Diperlukan sedikit penyiraman untuk menaikkan kelembaban udara",
         ),
         (3, 3): ("Kritis", "Diperlukan penyiraman dengan volume yang besar"),
+        
     }
 
     return conditions.get(
@@ -68,7 +71,6 @@ def set_nyala_waktu(cluster):
     else:
         return {}  # When the cluster does not match any condition
 
-
 def klasifikasi_pengairan(input_data):
     try:
         new_data = pd.DataFrame([input_data])
@@ -82,11 +84,15 @@ def klasifikasi_pengairan(input_data):
             new_data["Hasil_Tanah"].iloc[0],
             new_data["Hasil_Udara"].iloc[0],
         )
-        new_data["Cluster"] = (new_data["Hasil_Tanah"] + new_data["Hasil_Udara"]) / 2
+        new_data["Cluster"] = (
+            new_data["Hasil_Tanah"] + new_data["Hasil_Udara"]
+        ) / 2
         info = set_nyala_waktu(new_data["Cluster"].iloc[0])
 
         # Return the response
         response = {"Kondisi": kondisi, "Saran": saran, "Informasi Kluster": info}
         return jsonify(response)
+    
+    
     except Exception as e:
         return jsonify({"error": str(e)}), 500
