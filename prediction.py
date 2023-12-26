@@ -1,13 +1,14 @@
 from tensorflow.keras.models import load_model
 import pandas as pd
 import pymysql.cursors
+from decouple import config
 
 # Update the database connection information
 database_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': '',  # Add your password if any
-    'db': 'nurtura_grow',
+    'host': config('DB_HOST', 'localhost'),
+    'user': config('DB_USERNAME', 'root'),
+    'password': config('DB_PASSWORD', ""), 
+    'db': config('DB_DATABASE', "nurtura_grow"),
     'charset': 'utf8mb4',
     'cursorclass': pymysql.cursors.DictCursor
 }

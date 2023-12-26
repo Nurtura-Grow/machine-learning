@@ -1,22 +1,21 @@
 from flask import Flask, request, jsonify
-# from flask_cors import CORS, cross_origin
+from flask_cors import CORS, cross_origin
 from penyiraman import klasifikasi_pengairan
 from pemupukan import rekomendasi_pupuk_api
-from predict4 import prediction
+from prediction import prediction
 from datetime import datetime, timedelta
 
 application = Flask(__name__)
-# cors = CORS(application)
-# application.config["CORS_HEADERS"] = "Content-Type"
-
+cors = CORS(application)
+application.config["CORS_HEADERS"] = "Content-Type"
 
 @application.route("/", methods=["GET"])
-# @cross_origin()
+@cross_origin()
 def index():
     return jsonify({"message": "Hello, World!"})
 
 @application.route("/pemupukan", methods=["POST"])
-# @cross_origin()
+@cross_origin()
 def pemupukan_api():
     try:
         input_data = request.get_json()
@@ -36,7 +35,7 @@ def pemupukan_api():
         return jsonify({"error": str(e)}), 400
 
 @application.route("/penyiraman", methods=["POST"])
-# @cross_origin()
+@cross_origin()
 def penyiraman_api():
     try:
         input_data = request.get_json()
@@ -58,6 +57,7 @@ def penyiraman_api():
 
 
 @application.route("/predict", methods=["GET"])
+@cross_origin()
 def predict_hourly():
     try:
         # Prediksi setiap jam untuk masing-masing model
