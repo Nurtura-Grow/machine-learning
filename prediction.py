@@ -20,7 +20,7 @@ def get_latest_data(model_name):
         with connection.cursor() as cursor:
             table_name = 'data_sensor'
             columns_to_select = ['timestamp_pengukuran', model_name]
-            latest_data_query = f"SELECT {', '.join(columns_to_select)} FROM {table_name} ORDER BY `timestamp_pengukuran` DESC LIMIT 60"
+            latest_data_query = f"SELECT {', '.join(columns_to_select)} FROM {table_name} ORDER BY `timestamp_pengukuran` DESC LIMIT 144"
             cursor.execute(latest_data_query)
             result = cursor.fetchall()
 
@@ -45,10 +45,8 @@ models = {
     "kelembapan_tanah": load_model("model_soilmoisture.h5")
 }
 
-n_steps = 10
-
 def make_prediction(model, latest_data):
-    x_input = latest_data.reshape((1, 10, 1))
+    x_input = latest_data.reshape((1, 24, 1))
     prediction_result = model.predict(x_input, verbose=0)
     return prediction_result[0]
 
