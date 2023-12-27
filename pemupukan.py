@@ -11,23 +11,22 @@ def calculate_recommendation(tinggi_tanaman, hst):
     nyala = False
     waktu = 0
     tinggi_optimal = 0
-    message = ""
+    message = "Tinggi tanaman atau HST tidak sesuai"
+    
+    if hst % 3 != 0:
+        nyala = False
+        tinggi_optimal = 1
+        message = "Belum tiba pada jangka waktu yang tepat untuk pelaksanaan pemupukan"
 
-    if not data_tanaman.empty:  
+    elif hst % 3 == 0:  
         tinggi_minimal = data_tanaman["tinggi_minimal"].values[0]
         tinggi_maksimal = data_tanaman["tinggi_maksimal"].values[0]
 
-        if tinggi_tanaman in range(tinggi_tanaman, tinggi_maksimal):
-            if hst % 3 != 0:
-                nyala = False
-                tinggi_optimal = 1
-                message = "Belum tiba pada jangka waktu yang tepat untuk pelaksanaan pemupukan"
-        
-            elif hst % 3 == 0:
-                nyala = True
-                waktu = 60
-                tinggi_optimal = 1
-                message = "Tinggi tanaman optimal, jalankan pemupukan sesuai SOP"
+        if tinggi_minimal < tinggi_tanaman < tinggi_maksimal:
+            nyala = True
+            waktu = 60
+            tinggi_optimal = 1
+            message = "Tinggi tanaman optimal, jalankan pemupukan sesuai SOP"
 
         elif tinggi_tanaman > tinggi_maksimal:
             nyala = False
