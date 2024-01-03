@@ -4,6 +4,7 @@ from penyiraman import klasifikasi_pengairan
 from pemupukan import rekomendasi_pupuk_api
 from prediction import prediction
 from datetime import datetime, timedelta
+import pytz
 
 application = Flask(__name__)
 cors = CORS(application)
@@ -65,8 +66,11 @@ def predict_hourly():
         result_humidity = prediction("kelembapan_udara")
         result_soilmoisture = prediction("kelembapan_tanah")
 
-        # Waktu prediksi 1 jam ke depan
-        predicted_time = datetime.now() + timedelta(hours=1)
+        # Tentukan zona waktu Asia/Jakarta
+        jakarta_timezone = pytz.timezone('Asia/Jakarta')
+
+        # Waktu prediksi 1 jam ke depan dalam zona waktu yang ditentukan
+        predicted_time = datetime.now(jakarta_timezone) + timedelta(hours=1)
 
         result_json = {
             "Time": predicted_time.strftime("%Y-%m-%d %H:%M:%S"),
