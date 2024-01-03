@@ -3,56 +3,59 @@ import pandas as pd
 import pymysql.cursors
 from decouple import config
 
-# Update the database connection information
-database_config = {
-    'host': config('DB_HOST', 'localhost'),
-    'user': config('DB_USERNAME', 'root'),
-    'password': config('DB_PASSWORD', ""), 
-    'db': config('DB_DATABASE', "nurtura_grow"),
-    'charset': 'utf8mb4',
-    'cursorclass': pymysql.cursors.DictCursor
-}
+def getDataSOP():
+    # Update the database connection information
+    database_config = {
+        'host': config('DB_HOST', 'localhost'),
+        'user': config('DB_USERNAME', 'root'),
+        'password': config('DB_PASSWORD', ""), 
+        'db': config('DB_DATABASE', "nurtura_grow"),
+        'charset': 'utf8mb4',
+        'cursorclass': pymysql.cursors.DictCursor
+    }
 
-connection = pymysql.connect(**database_config)
+    connection = pymysql.connect(**database_config)
 
-try:
-    with connection.cursor() as cursor:
-        # Select all data from SOP_Pengairan table
-        sql = "SELECT * FROM sop_pengairan"
-        cursor.execute(sql)
+    try:
+        with connection.cursor() as cursor:
+            # Select all data from SOP_Pengairan table
+            sql = "SELECT * FROM sop_pengairan"
+            cursor.execute(sql)
 
-        # Fetch all the rows
-        rows = cursor.fetchall()
+            # Fetch all the rows
+            rows = cursor.fetchall()
 
-        # Organize the data
-        data = {
-            'temperature_min': None,
-            'temperature_max': None,
-            'humidity_min': None,
-            'humidity_max': None,
-            'soil_moisture_min': None,
-            'soil_moisture_max': None,
-        }
-        
-        for row in rows:
-            if row['nama'] == 'temperature':
-                data['temperature_min'] = int(row['min'])
-                data['temperature_max'] = int(row['max'])
-            elif row['nama'] == 'humidity':
-                data['humidity_min'] = int(row['min'])
-                data['humidity_max'] = int(row['max'])
-            elif row['nama'] == 'soil moisture':
-                data['soil_moisture_min'] = int(row['min'])
-                data['soil_moisture_max'] = int(row['max'])
-                
-        print(data)
+            # Organize the data
+            data = {
+                'temperature_min': None,
+                'temperature_max': None,
+                'humidity_min': None,
+                'humidity_max': None,
+                'soil_moisture_min': None,
+                'soil_moisture_max': None,
+            }
+            
+            for row in rows:
+                if row['nama'] == 'temperature':
+                    data['temperature_min'] = int(row['min'])
+                    data['temperature_max'] = int(row['max'])
+                elif row['nama'] == 'humidity':
+                    data['humidity_min'] = int(row['min'])
+                    data['humidity_max'] = int(row['max'])
+                elif row['nama'] == 'soil_moisture':
+                    data['soil_moisture_min'] = int(row['min'])
+                    data['soil_moisture_max'] = int(row['max'])
+                    
+            return data;
 
-finally:
-    # Close the connection
-    connection.close()
+    finally:
+        # Close the connection
+        connection.close()
 
 # Define the function to classify based on the criteria
 def label_cluster(soil_moisture, humidity, temperature):
+    data = getDataSOP();
+    
     hasil_tanah = 0
     hasil_udara = 0
 

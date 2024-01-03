@@ -1,4 +1,4 @@
-from tensorflow.keras.models import load_model
+from keras.models import load_model
 import pandas as pd
 import pymysql.cursors
 from decouple import config
