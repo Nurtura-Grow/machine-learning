@@ -114,9 +114,9 @@ def evaluate_condition(hasil_tanah, hasil_udara):
 
 # Define the function to determine "nyala" and "waktu" based on cluster
 def set_nyala_waktu(cluster):
-    if 1 <= cluster < 1.5:
+    if 1 <= cluster <= 1.5:
         return {"nyala": False, "waktu": 0}
-    elif 1.5 <= cluster <= 2.5:
+    elif 1.5 < cluster <= 2.5:
         return {"nyala": True, "waktu": 600}
     elif cluster == 3:
         return {"nyala": True, "waktu": 3000}
